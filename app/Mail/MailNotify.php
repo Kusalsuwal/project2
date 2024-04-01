@@ -38,12 +38,12 @@ class MailNotify extends Mailable
     /**
      * Get the message content definition.
      */
-    public function content(): Content
+    public function build()
     {
-        // dd('mail sent');
-        return new Content(
-            view: 'Account.verifymail', // Ensure 'emails.register' corresponds to your blade template
-        );
+        return $this->from('kusalsuwal5@gmail.com', 'Mail Notify')
+                    ->subject('Mail Notify')
+                    ->view('Account.verifymail')
+                    ->with(['data' => $this->data]);
     }
 
     /**

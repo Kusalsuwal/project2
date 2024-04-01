@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <p>Congratulation you have succesfully Registered to Ambition Guru team.</p>
+    <p>Congratulation {{$data['username']}} you have succesfully Registered to Ambition Guru team.</p>
     
 </body>
 </html>
