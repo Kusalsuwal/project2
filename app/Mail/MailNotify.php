@@ -30,7 +30,7 @@ class MailNotify extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mail Notify',
+            subject: 'Ambition Guru',
             from: new Address('kusalsuwal5@gmail.com', 'Mail'),
         );
     }
@@ -40,8 +40,8 @@ class MailNotify extends Mailable
      */
     public function build()
     {
-        return $this->from('kusalsuwal5@gmail.com', 'Mail Notify')
-                    ->subject('Mail Notify')
+        return $this->from('kusalsuwal5@gmail.com', 'Ambition Guru')
+                    ->subject('Ambition Guru')
                     ->view('Account.verifymail')
                     ->with(['data' => $this->data]);
     }
