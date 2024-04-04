@@ -49,7 +49,7 @@
             <div class="col">
                 <h1>Welcome to Ambition Guru Team</h1>
                
-                <p style="font-weight:bold;"> Welcome, {{ $username }}</p>
+                <p style="font-weight:bold;"> Welcome, {{ Auth::user()->name }}</p>
                 <a class="nav-link" href="{{ url('Member') }}">Member here</a>
             </div>
             

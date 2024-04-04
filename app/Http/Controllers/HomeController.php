@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailNotify;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -133,19 +135,20 @@ public function restores($id)
     }
 
     public function Slogin(Request $request)
-{
+    {
+        $username = $request->input('username');
+        $password = $request->input('password');
     
-    $username = $request->input('username');
-    $password = $request->input('password');
-
-    $user = User::where('username', $username)->first();
-
-    if ($user && Hash::check($password, $user->password)) {
-        return redirect()->route('Dashboard',compact('username'));
-    } else {
-        return redirect()->route('login')->with('error', 'Invalid username or password.');
+        $user = User::where('username', $username)->first();
+    
+        if ($user && Hash::check($password, $user->password)) {
+            Auth::login($user); 
+            return redirect()->route('Dashboard', compact('username'));
+        } else {
+            return redirect()->route('login')->with('error', 'Invalid username or password.');
+        }
     }
-}
+    
 
 
     public function store(StoreRequest $request)
@@ -160,7 +163,7 @@ public function restores($id)
         $student->username = $request->input('username');
         $student->password = Hash::make($request->password);
     
-        // Save student image if provided
+        
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
@@ -179,16 +182,19 @@ public function restores($id)
     }
     public function logout()
 {
-    // Perform logout logic here
-    Session::forget('username'); // Assuming you store the username in the session
-    return redirect()->route('landingpage');
+    Auth::logout();
+
+    Cache::flush();
+
+    return redirect('/landingpage');
+
 }
 public function Member()
 {
-    // $data = User::where('id',$id)->first();
+   
     $users = User::all();
     return view('Account.Member', compact('users'));
-    // return view('Account.Member', );
+ 
 }
     
 
