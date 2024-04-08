@@ -21,7 +21,7 @@ class AuthenticateMiddleware
         // dd($next);
         // dd(Auth::user()->id);
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
+            return redirect()->route('login')->with('error', 'You msust be logged in to access this page.');
         }
 
         return $next($request);

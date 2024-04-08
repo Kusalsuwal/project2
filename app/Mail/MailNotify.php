@@ -10,22 +10,27 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address as Address;
 
-class MailNotify extends Mailable
+class MailNotify extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $data;
 
-    /**
+     /**
      * Create a new message instance.
+     *
+     * @param  array  $data
+     * @return void
      */
     public function __construct($data)
     {
         $this->data = $data;
     }
 
-    /**
+     /**
      * Get the message envelope.
+     *
+     * @return \Illuminate\Mail\Mailables\Envelope
      */
     public function envelope(): Envelope
     {

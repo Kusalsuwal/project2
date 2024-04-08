@@ -3,36 +3,28 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Laravel\Fortify\Fortify;
 
-class StoreRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
-    
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, mixed>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
-        // return [
-        //     'name' => 'required|string|max:255',
-        //     'number' => 'required|string|max:255',
-        //     'username' => 'required|string|max:255',
-        //     'password' => 'required|string|max:255',
-        //     'address' => 'required|string|max:255',
-        //     'email' => 'required|email|',
-        //     'pan' => 'required|string|max:255|',
-        //     'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        // ];
+        return [
+            Fortify::username() => 'required|string',
+            'password' => 'required|string',
+        ];
     }
 }

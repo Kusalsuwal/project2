@@ -134,9 +134,6 @@
                         <a href="{{ route('edit', $co->id) }}" class="action-btn edit-btn">
                             <i class="btn-icon bi bi-pencil"></i>Edit
                         </a>
-                        <!-- <a href="{{ route('view', $co->id) }}" class="action-btn view-btn">
-                            <i class="btn-icon bi bi-eye"></i>View
-                        </a> -->
                         <a href="{{ route('delete', $co->id) }}" class="action-btn delete-btn" onclick="deleteConfirmation(event)">
                             <i class="btn-icon bi bi-trash"></i>Delete
                         </a>

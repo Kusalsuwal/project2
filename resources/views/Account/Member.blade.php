@@ -140,8 +140,6 @@
                 <th>Username</th>
                 <th>image</th>
 
-
-                <!-- <th>Action</th> -->
             </tr>
             </thead>
             <tbody>

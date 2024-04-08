@@ -7,38 +7,35 @@
     <title>Ambition Guru</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Custom CSS */
         .jumbotron {
-            background-color: #007bff; /* blue */
+            background-color: #007bff; 
             padding: 100px 20px;
             text-align: center;
             margin-top: 20px;
-            color: #fff; /* white */
+            color: #fff; 
         }
 
         .navbar-brand {
             font-size: 1.5em;
             font-weight: bold;
-            color: #007bff; /* blue */
+            color: #007bff; 
         }
 
         .navbar-nav .nav-link {
-            color: #007bff; /* blue */
+            color: #007bff; 
         }
 
         .navbar-nav .nav-link:hover {
-            color: #0056b3; /* darker blue */
+            color: #0056b3; 
         }
 
         body {
-            background-color: #f8f9fa; /* light gray */
+            background-color: #f8f9fa; 
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Ambition Guru</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -59,13 +56,9 @@
             </ul>
         </div>
     </nav>
-
-    <!-- Welcome Section -->
     <div class="jumbotron">
         <h1 class="display-4">Welcome to my new project</h1>
     </div>
-
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

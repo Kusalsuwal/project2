@@ -95,7 +95,6 @@
     </style>
 </head>
 <body>
-        <!-- Navigation Bar -->
         <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Ambition Guru Team</a>
@@ -111,8 +110,6 @@
     
     <form method="POST" action="{{ route('store') }}" enctype="multipart/form-data">
         @csrf
-      
-
         <label for="username">Username:</label>
         <input type="text" id="username" name="username">
 

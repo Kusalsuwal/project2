@@ -74,8 +74,8 @@
 <script>
     function deleteConfirmation(event) {
         event.preventDefault();
-        const form = event.target.closest('form'); // Find the closest form element
-        const deleteUrl = form.action; // Get the action attribute of the form
+        const form = event.target.closest('form'); 
+        const deleteUrl = form.action; 
 
         Swal.fire({
             title: 'Are you sure?',
@@ -87,7 +87,7 @@
             confirmButtonText: 'Yes, Restore it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                form.submit(); // Submit the form
+                form.submit(); 
             }
         });
     }

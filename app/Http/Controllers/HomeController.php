@@ -2,92 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\StoreRequest;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Session;
-
-
+use App\Jobs\SendEmailJob;
 use App\Models\User;
-use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\MailNotify;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Fortify\Http\Requests\LoginRequest as RequestsLoginRequest;
 
 class HomeController extends Controller
 {
-
-
     public function index()
     {
-        // Retrieve user emails from your database or wherever you store user information
-        $users = User::all(); // Assuming you have a User model
-    
-        // Iterate over each user and send an email
+        // You may not need to send emails to all users here, as this could be heavy.
+        // If you want to send emails to all users, consider queueing this operation separately.
+        $users = User::all(); 
         foreach ($users as $user) {
-            Mail::to($user->email)->send(new MailNotify([
-                'title' => 'The Title',
-                'body' => 'The Body',
-                'username' => $user->username, // Assuming you have a username field in your user table
-            ]));
+            SendEmailJob::dispatch($user);
         }
     }
-    
-
-
-    public function verifymail()
-    {
-        return view('Admin.restore', );
-    }
-
-
 
     public function profile()
-        {
-            $users = User::all();
-            return view ('Admin.profile',compact('users'));
-        }
-        public function edit($id)
-        {
-            $data = User::where('id',$id)->first();
-            return view('Admin.edit', compact('data'));
-        }
-        public function delete($id)
-{
+    {
+        $users = User::all();
+        return view('Admin.profile', compact('users'));
+    }
+
+    public function edit($id)
+    {
+        $data = User::findOrFail($id);
+        return view('Admin.edit', compact('data'));
+    }
+
+    public function delete($id)
+    {
         $data = User::findOrFail($id);
         $data->delete();
 
-
-    return redirect()->route('profile')->with('success', 'Record deleted successfully.');
-
-}
-public function restore()
-{
-    $deletedData = User::onlyTrashed()->get();
-
-    return view('Admin.restore', compact('deletedData'));
-}
-public function restores($id)
-{
-
-    $deletedData = User::onlyTrashed()->find($id);
-
-
-
-    if ($deletedData) {
-
-        $deletedData->restore();
-        return redirect()->route('restore');
-    } else {
-        return redirect()->route('restore');
+        return redirect()->route('profile')->with('success', 'Record deleted successfully.');
     }
-}
-        public function update(Request $request, $id)
+
+    public function restore()
     {
-        // dd($request->all());
+        $deletedData = User::onlyTrashed()->get();
+        return view('Admin.restore', compact('deletedData'));
+    }
+
+    public function restores($id)
+    {
+        $deletedData = User::onlyTrashed()->find($id);
+        if ($deletedData) {
+            $deletedData->restore();
+            return redirect()->route('restore');
+        } else {
+            return redirect()->route('restore');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
         $data = User::findOrFail($id);
         $data->name = $request->name;
         $data->username = $request->username;
@@ -96,7 +71,7 @@ public function restores($id)
         $data->address = $request->address;
         $data->email = $request->email;
         $data->pan = $request->pan;
-    
+
         if ($request->hasFile('new_image')) {
             if ($data->image) {
                 Storage::delete('uploads/students'. $data->image);
@@ -109,51 +84,48 @@ public function restores($id)
             $data->image = $filename;
         }
 
-    
         $data->save();
 
         return redirect()->route('profile')->with('success', 'Data updated successfully.');
     }
 
- 
     public function landingpage()
     {
         return view('homepage.landingpage');
     }
+
     public function Register()
     {
         return view('Account.Register');
     }
-    public function Dashboard($username)
-    {
 
-        return view('Account.Dashboard', compact('username'));
+    public function Dashboard()
+    {
+        return view('Account.Dashboard');
     }
+
     public function login(Request $request)
     {
         return view('Account.login');
     }
 
-    public function Slogin(Request $request)
+    public function Slogin(RequestsLoginRequest $request)
     {
         $username = $request->input('username');
         $password = $request->input('password');
-    
+
         $user = User::where('username', $username)->first();
-    
+
         if ($user && Hash::check($password, $user->password)) {
-            Auth::login($user); 
-            return redirect()->route('Dashboard', compact('username'));
+            Auth::login($user);
+            return redirect()->route('Dashboard');
         } else {
             return redirect()->route('login')->with('error', 'Invalid username or password.');
         }
     }
-    
-
 
     public function store(StoreRequest $request)
     {
-        // dd($request->all());
         $student = new User;
         $student->name = $request->input('name');
         $student->number = $request->input('number');
@@ -161,9 +133,8 @@ public function restores($id)
         $student->email = $request->input('email');
         $student->pan = $request->input('pan');
         $student->username = $request->input('username');
-        $student->password = Hash::make($request->password);
+        $student->password = Hash::make($request->input('password'));
     
-        
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
@@ -172,30 +143,28 @@ public function restores($id)
             $student->image = $filename;
         }
     
-        // Save student record
         $student->save();
-        $this->index();
     
+        dispatch(new SendEmailJob($student));
     
         return redirect()->route('login')->with('success', 'Form submitted successfully!');
-
     }
-    public function logout()
-{
-    Auth::logout();
-
-    Cache::flush();
-
-    return redirect('/landingpage');
-
-}
-public function Member()
-{
-   
-    $users = User::all();
-    return view('Account.Member', compact('users'));
- 
-}
     
 
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/landingpage');
+    }
+
+    public function Member()
+    {
+        $users = User::all();
+        return view('Account.Member', compact('users'));
+    }
+
+    public function LoginProfile()
+    {
+        return view('Account.LoginProfile');
+    }
 }
