@@ -64,13 +64,9 @@ class HomeController extends Controller
     public function update(Request $request, $id)
     {
         $data = User::findOrFail($id);
-        $data->name = $request->name;
-        $data->username = $request->username;
-        $data->password = Hash::make($request->password);
-        $data->number = $request->number;
-        $data->address = $request->address;
-        $data->email = $request->email;
-        $data->pan = $request->pan;
+
+        $data->title = $request->title;
+        $data->body = $request->body;
 
         if ($request->hasFile('new_image')) {
             if ($data->image) {
@@ -86,7 +82,7 @@ class HomeController extends Controller
 
         $data->save();
 
-        return redirect()->route('profile')->with('success', 'Data updated successfully.');
+        return redirect()->route('Dashboard')->with('success', 'Data updated successfully.');
     }
 
     public function landingpage()
@@ -109,7 +105,7 @@ class HomeController extends Controller
         return view('Account.login');
     }
 
-    public function Slogin(RequestsLoginRequest $request)
+    public function Slogin(Request $request)
     {
         $username = $request->input('username');
         $password = $request->input('password');
@@ -124,7 +120,7 @@ class HomeController extends Controller
         }
     }
 
-    public function store(StoreRequest $request)
+    public function store(LoginRequest $request)
     {
         $student = new User;
         $student->name = $request->input('name');
@@ -145,6 +141,7 @@ class HomeController extends Controller
     
         $student->save();
     
+        // Dispatch SendEmailJob after user registration
         dispatch(new SendEmailJob($student));
     
         return redirect()->route('login')->with('success', 'Form submitted successfully!');

@@ -9,7 +9,7 @@ use App\Http\Middleware\AuthenticateMiddleware;
 Route::get('/', function () {
     return view('welcome');
 });
-  
+   
 Route::get('/LoginProfile', [HomeController::class, 'LoginProfile'])->name('LoginProfile');
 Route::get('/Register', [HomeController::class, 'Register'])->name('Register');
 Route::get('/verifymail', [HomeController::class, 'verifymail'])->name('verifymail');
@@ -19,6 +19,7 @@ Route::post('/store', [HomeController::class, 'store'])->name('store');
 Route::get('sendmail', [HomeController::class, 'index'])->name('index');
 Route::get('/landingpage', [HomeController::class, 'landingpage'])->name('landingpage');
 Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+
 
 Route::middleware(['auth.custom'])->group(function () {
 Route::get('/Dashboard', [HomeController::class, 'Dashboard'])->name('Dashboard');

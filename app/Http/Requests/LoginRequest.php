@@ -12,7 +12,7 @@ class LoginRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            Fortify::username() => 'required|string',
+            'username' => 'required|string|max:255',
             'password' => 'required|string',
         ];
     }

@@ -63,10 +63,15 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="profile-card text-center">
-          <img src="" alt="Profile Picture" class="profile-picture">
+        <img src="{{ asset('uploads/students/' . Auth::user()->image) }}" alt="Profile Picture" class="profile-picture">
           <h2 class="mt-3">{{ Auth::user()->name }}</h2>
-          <p>Software Engineer</p>
-          <p>Welcome to the team.</p>
+        
+          <p>Email:{{ Auth::user()->email }}</p>
+          <p>Number:{{ Auth::user()->number }}</p>
+          <p>Address:{{ Auth::user()->address }}</p>
+          <p>Pan:{{ Auth::user()->pan }}</p>
+          
+
           <ul class="list-inline">
             <li class="list-inline-item"><a href="#">Facebook</a></li>
             <li class="list-inline-item"><a href="#">Twitter</a></li>
